@@ -617,7 +617,7 @@ function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivar
     coverages, derivedreads, frequencies, counts = filtervectorsandapplycountmap(coverages, derivedreads, frequencies, allowedindices)
     println(3)
 
-    return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, coverages, derivedreads, frequencies, counts, messages, scalingmessages)
+    return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, coverages, derivedreads, frequencies, counts; messages = messages, scalingmessages =  scalingmessages)
 end 
 
 """
@@ -672,7 +672,7 @@ function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivar
     dfsediment = readcsvfile(sedimentdata, headersedimentdata)
     dffreq = readcsvfile(frequencies, headerfrequencies)
     println(1)
-    return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, dfsediment, dffreq; messages, scalingmessages)
+    return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, dfsediment, dffreq; messages = messages, scalingmessages = scalingmessages)
 end 
 
 """
@@ -685,7 +685,7 @@ function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivar
     coverages = sedimentdata[!,2]
     frequencies = frequencies[!,1]
     println(2) 
-    return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, coverages, derivedreads, frequencies; messages, scalingmessages)
+    return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, coverages, derivedreads, frequencies; messages = messages, scalingmessages = scalingmessages)
 end 
 
 
