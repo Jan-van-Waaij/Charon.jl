@@ -263,7 +263,7 @@ calcloglik(coverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:
 Read CSV file and turn it into a DataFrame (from DataFrames package). It automatically detects whether the CSV file has a header. 
 """
 function readcsvfile(filename::AbstractString, header::Union{Nothing, Bool})
-    # if header=nothing, determine whether the file has a header. 
+    # if header===nothing, determine whether the file has a header. 
     if header === nothing 
         dftest = CSV.read(filename, DataFrame, header = false, limit=1)  
         if typeof(dftest[1,1]) <: AbstractString 
@@ -276,6 +276,8 @@ function readcsvfile(filename::AbstractString, header::Union{Nothing, Bool})
     end 
     return CSV.read(filename, DataFrame, header = header)
 end 
+
+readcsvfile(filename::IO, header::Bool) = CSV.read(filename, header)
 
 """
     exactposterior(nrange::AbstractVector{<:Integer}, τCrange::AbstractVector{<:Real}, τArange::AbstractVector{<:Real}, ϵrange::AbstractVector{<:Real}, coverages::AbstractVector{<:Integer}, uniquecoverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer}, frequencies::AbstractVector{<:Real}, counts::AbstractVector{<:Integer}, messages::Integer)
@@ -660,6 +662,29 @@ function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivar
     return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, df; messages = messages, scalingmessages = scalingmessages)
 end  
 
+"""
+    MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivariateDistribution, prioronτCτA::ContinuousMultivariateDistribution, prioronϵ::ContinuousUnivariateDistribution, sedimentdata::AbstractString, frequencies::AbstractString, derivedreads::AbstractVector{<:Integer}, frequencies::AbstractVector{<:Real}; messages::Integer=nsteps÷100, scalingmessages::Bool=true, headersedimentdata::Union{Nothing, Bool}, headerfrequencies::Union{Nothing, Bool})
+
+sedimentdata is a path to a CSV file, where the first column are the derived reads, and the second column are the coverages. frequencies is a path to a CSV file with one column, containing frequencies of the anchor population. The number of rows of both files should be the same. 
+"""
+function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivariateDistribution, prioronτCτA::ContinuousMultivariateDistribution, prioronϵ::ContinuousUnivariateDistribution, sedimentdata::Union{AbstractString, IO}, frequencies::Union{AbstractString, IO}; messages::Integer=nsteps÷100, scalingmessages::Bool=true, headersedimentdata::Union{Nothing, Bool}=nothing, headerfrequencies::Union{Nothing, Bool}=nothing)
+    dfsediment = readcsvfile(sedimentdata, headersedimentdata)
+    dffreq = readcsvfile(frequencies, headerfrequencies)
+    return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, dfsediment, dffreq; messages, scalingmessages)
+end 
+
+"""
+    MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivariateDistribution, prioronτCτA::ContinuousMultivariateDistribution, prioronϵ::ContinuousUnivariateDistribution, sedimentdata::DataFrame, frequencies::DataFrame; messages::Integer=nsteps÷100, scalingmessages::Bool=true)
+
+sedimentdata is a path to a DataFrame, where the first column are the derived reads, and the second column are the coverages. frequencies is a DataFrame with one column, containing frequencies of the anchor population. The number of rows of both files should be the same.
+"""
+function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivariateDistribution, prioronτCτA::ContinuousMultivariateDistribution, prioronϵ::ContinuousUnivariateDistribution, sedimentdata::DataFrame, frequencies::DataFrame; messages::Integer=nsteps÷100, scalingmessages::Bool=true)
+    derivedreads = sedimentdata[!,1]
+    coverages = sedimentdata[!,2]
+    frequencies = frequencies[!,1]
+    return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, coverages, derivedreads, frequencies; messages, scalingmessages)
+end 
+
 
 """
     unpackposterior(nsteps::Integer, chains::AbstractVector{<:Tuple{AbstractVector{<:Integer}, AbstractMatrix{<:Real}, AbstractMatrix{<:Real}, AbstractMatrix{<:Real}, AbstractMatrix{Bool}, AbstractMatrix{<:Real}}})
@@ -702,6 +727,11 @@ function unpackposterior(nsteps::Integer, chains::AbstractVector{<:Tuple{Abstrac
         results = vcat(results, df)
     end 
     return results
+end 
+
+function unpackposterior(chains::AbstractVector{<:Tuple{AbstractVector{<:Integer}, AbstractMatrix{<:Real}, AbstractMatrix{<:Real}, AbstractMatrix{<:Real}, AbstractMatrix{Bool}, AbstractMatrix{<:Real}}})
+    nsteps = length(chains[1][1])
+    return unpackposterior(nsteps, chains)
 end 
 
 end # module 
