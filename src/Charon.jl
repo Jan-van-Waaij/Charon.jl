@@ -615,7 +615,8 @@ function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivar
     any(allowedindices) || throw(ArgumentError("At least one element of frequencies with corresponding positive coverage should be strictly between 0 and 1."))
 
     coverages, derivedreads, frequencies, counts = filtervectorsandapplycountmap(coverages, derivedreads, frequencies, allowedindices)
-    
+    println(3)
+
     return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, coverages, derivedreads, frequencies, counts, messages, scalingmessages)
 end 
 
@@ -670,6 +671,7 @@ sedimentdata is a path to a CSV file, where the first column are the derived rea
 function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivariateDistribution, prioronτCτA::ContinuousMultivariateDistribution, prioronϵ::ContinuousUnivariateDistribution, sedimentdata::Union{AbstractString, IO}, frequencies::Union{AbstractString, IO}; messages::Integer=nsteps÷100, scalingmessages::Bool=true, headersedimentdata::Union{Nothing, Bool}=nothing, headerfrequencies::Union{Nothing, Bool}=nothing)
     dfsediment = readcsvfile(sedimentdata, headersedimentdata)
     dffreq = readcsvfile(frequencies, headerfrequencies)
+    println(1)
     return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, dfsediment, dffreq; messages, scalingmessages)
 end 
 
@@ -682,6 +684,7 @@ function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivar
     derivedreads = sedimentdata[!,1]
     coverages = sedimentdata[!,2]
     frequencies = frequencies[!,1]
+    println(2) 
     return MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, coverages, derivedreads, frequencies; messages, scalingmessages)
 end 
 
