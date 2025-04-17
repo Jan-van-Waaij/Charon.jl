@@ -4,8 +4,8 @@ using Distributions # for probability distributions
 using LinearAlgebra # for Tridiagonal objects 
 using StatsBase # for countmap 
 using Random # for setting the seed
-using CSV # to test readcsvfile 
-using GZip # to test readcsvfile 
+# using CSV # to test readcsvfile 
+# using GZip # to test readcsvfile 
 using DataFrames # to test unpackposterior
 
 using Charon: EigenExpansion, makeQ, makeQꜜ, calcmatrix, logprobderivedreads!, preparedata, filtervectorsandapplycountmap, makeqfixedn, makeq, updateq!, readcsvfile
