@@ -1,7 +1,7 @@
 name = "Charon"
 uuid = "7cff5b3a-8f09-4ceb-8bc2-fd31e9948585"
 authors = ["Jan van Waaij <jvanwaaij@gmail.com>"]
-version = "0.3.0" # version 
+version = "0.3.1" # version 
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
