@@ -4,7 +4,7 @@
   
 ## Install Julia 
 
-Our software is written in the Julia language, and should be run by the Julia interpretor. Julia compiles the code in the background and thereby achieves speeds comparable with C. The current version of the Charon package is 0.2 and it should run with every Julia 1.X version. 
+Our software is written in the Julia language, and should be run by the Julia interpretor. Julia compiles the code in the background and thereby achieves speeds comparable with C. The current version of the Charon package is 0.3.2 and it should run with every Julia 1.X version. 
 
 Go to [julialang.org](https://julialang.org/downloads/) and follow the installation instructions for your platform.
 
@@ -174,7 +174,7 @@ Type
 ```
 julia --threads=4 
 ```
-this starts `julia` with 4 threads, and enables you to run 4 mcmc chains in parallel. You can use another number of you want to run more or less chains in parallel. This starts the Julia [REPL](https://docs.julialang.org/en/v1/stdlib/REPL/). For Julia 1.4 or older, you need to set the `JULIA_NUM_THREADS` environment variable, as described [here](#older-versions-of-julia).
+this starts `julia` with 4 threads, and enables you to run 4 mcmc chains in parallel. You can use another number, if you want to run more or less chains in parallel. This starts the Julia [REPL](https://docs.julialang.org/en/v1/stdlib/REPL/). For Julia 1.4 or older, you need to set the `JULIA_NUM_THREADS` environment variable, as described [here](#older-versions-of-julia).
 
 
 ### Install Charon.
@@ -228,7 +228,7 @@ Similarly, set the path to the frequency file.
 ```julia
 frequencyfile = "path/to/frequencyfile.csv" # unix
 ```
-Alternatively, you can specify the path to the dice file. 
+Alternatively, you can specify the path to the DICE file. 
 ```julia
 dicefile = "path/to/dicefile.csv" # UNIX-systems
 ```

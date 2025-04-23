@@ -15,9 +15,9 @@ This is the MCMC sampler. It has seven methods.
 Data formats:
 
 You can input the data in four formats. 
-1. With two (opened) (zipped) files: a base count file, which is a CSV file where the first column are the number of derived reads, and the second column is the coverage, and a frequency file, which is a CSV file with one column, containing the frequencies. The data at line i in the base count file corresponds to the same locus as the data on line i of the frequency file.   
-2. As an (opened) (zipped) DICE file, or in the form of a DataFrame, also in DICE format. So the first column is the number of ancestral reads, the second column is the number of derived reads, the third column is the frequency in the anchor population, and the fourth column is the count of the number of loci where this combination of three numbers occur. 
-3. Or, by providing three vectors: `coverages`, `derivedreads`, `frequencies`, of length equal to the number of SNPs, where at loci `i`, there are `derivedreads[i]` derived reads, `coverages[i]` coverage and `frequencies[i]` frequency in the anchor population. 
+1. With two (opened) (gzipped) files: a base count file, which is a CSV file where the first column are the number of derived reads, and the second column is the coverage, and a frequency file, which is a CSV file with one column, containing the frequencies. The data at line i in the base count file corresponds to the same locus as the data on line i of the frequency file.   
+2. As an (opened) (gzipped) DICE file, or in the form of a DataFrame, also in DICE format. So the first column is the number of ancestral reads, the second column is the number of derived reads, the third column is the frequency in the anchor population, and the fourth column is the count of the number of loci where this combination of three numbers occur. 
+3. Or, by providing three vectors: `coverages`, `derivedreads`, `frequencies`, of length equal to the number of SNPs, where at locus `i`, there are `derivedreads[i]` derived reads, `coverages[i]` coverage and `frequencies[i]` frequency in the anchor population. 
 4. The third format is given with four vectors: `coverages`, `derivedreads`, `frequencies`, `counts`. This means that there are `counts[i]` loci with `coverages[i]` coverage, `derivedreads[i]` derived reads and frequency `frequencies[i]` in the anchor population.
 
 If you provide data in formats 1, 2, or 3, then the program will automatically convert it to format 4. 
@@ -67,7 +67,7 @@ Parameters:
 * `nrange` vector of n values. Subtype of AbstractVector{<:Integer}. Should be a subset of {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}. 
 * `τCrange` vector of τC values. Subtype of AbstractVector{<:Real}. All values should be non-negative. 
 * `τArange` vector of τA values. Subtype of AbstractVector{<:Real}. All values should be non-negative. 
-* `ϵrange` vector of ϵ values. Is a subtype of AbstractVector{<:Real}. 
+* `ϵrange` vector of ϵ values. Is a subtype of AbstractVector{<:Real}. All values should be non-negative and smaller than 0.5. 
 * `coverages` a vector with coverages = ancestral reads + derived reads. Is a subtype of `AbstractVector{<:Integer}`. All coverages should be non-negative integers, and at least one should be positive.
 * `uniquecoverages` should be equal to `unique(coverages)`.  
 * `derivedreads` a vector of derived reads. Is a subtype of `AbstractVector{<:Integer}`. All elements of the vector should be non-negative integers.
@@ -75,7 +75,7 @@ Parameters:
 * `counts`, all elements should be non-negative. For each index, `counts[index]` indicates how many loci there are with `derivedreads[index]` derived reads, coverage `coverages[index]` and frequency `frequencies[index]`. If `counts` is not provided, it will be calculated from `derivedreads`, `coverages` and `frequencies`.
 
 Keyword argument. 
-* `messages` is an integer. If `messages` is non-positive, no message will be printed. If `messages` is positive, every `messages` steps a message will be printed with the progress of the sampler. The default value is `length(n)*length(τCrange)*length(τArange)*length(ϵrange)÷100`, so every 1% progress a message is printed.
+* `messages` is an integer. If `messages` is non-positive, no message will be printed. If `messages` is positive, every `messages` steps a message will be printed with the progress of the calculations. The default value is `length(n)*length(τCrange)*length(τArange)*length(ϵrange)÷100`, so every 1% progress a message is printed.
 
 The output are 5 vectors: `ns, τCs, τAs, ϵs, logliks`, of each of length `length(n)*length(τCrange)*length(τArange)*length(ϵrange)`, where `logliks[index]` is the log likelihood, up to an additive constant, with parameters `ns[index]`, `τCs[index]`, `τAs[index]` and `ϵs[index]`. The additive constant only depends on the data, but not on the parameters. 
 
