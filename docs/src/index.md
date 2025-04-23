@@ -32,6 +32,4 @@ We generally assume:
 
 - **Parallel and Distributed Computing**: Julia has built-in support for parallel and distributed computing, making it easier to write code that scales across multiple cores and machines.
 
----
-
 Julia is a powerful tool for anyone looking to combine the simplicity of high-level languages with the performance of low-level languages. If you're familiar with R, Python, or C++, you'll find Julia to be a versatile and efficient addition to your programming toolkit.
