@@ -25,3 +25,6 @@ Manifest.toml
 
 # Ignore .DS_Store MacOS files. 
 .DS_Store
+
+# Ignore .vscode 
+.vscode

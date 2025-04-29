@@ -17,10 +17,12 @@ makedocs(
 # Documenter can also automatically deploy documentation to gh-pages.
 # See "Hosting Documentation" and deploydocs() in the Documenter manual
 # for more information.
-deploydocs(
+#=deploydocs(
     repo = "github.com/Jan-van-Waaij/Charon.jl.git"
     #branch = "gh-pages",
     #devbranch = "main",
     #push_preview = true,
     #make = "make.jl"
-)
+)=#
+
+# julia -e 'using LiveServer; serve(dir="docs/build")'    
