@@ -10,7 +10,7 @@ makedocs(
         "Table of contents" => "contents.md",
         "Getting started" => "guide.md",
         "Reference" => "reference.md",
-        "Index" => "siteindex.md"
+        "Index" => "allfunctions.md"
     ]
 )
 
