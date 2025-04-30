@@ -2,6 +2,10 @@
 
 Charon.jl is a Julia package for estimating population parameters from sediment DNA. I have tested this package extensively on all minor 1.X Julia versions (1.0-1.11). However, it is always better to use a recent version of Julia. If you have any problems, please reach out to me. 
 
+## Documentation
+
+[jan-van-waaij.github.io/Charon.jl/](https://jan-van-waaij.github.io/Charon.jl/)
+
 ## Install Julia (Juliaup). 
 Go to [julialang.org](https://julialang.org/downloads/) and follow the installation instructions for your platform.
 
