@@ -1,3 +1,6 @@
+using Pkg
+Pkg.instantiate()
+
 using Documenter
 using Charon
 
