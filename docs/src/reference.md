@@ -23,7 +23,7 @@ You can input the data in four formats.
 If you provide data in formats 1, 2, or 3, then the program will automatically convert it to format 4. 
 
 Parameters:
-* `nchains`, number of chains, which is a positive integer. If you want to run all your chains in parallel, start julia with number of threads equal or higher to `nchains`. 
+* `nchains`, number of chains, which is a positive integer. If you want to run all your chains in parallel, start julia with number of threads equal to `nchains`. 
 * `nsteps` number of samples per chain, which is a positive integer. 
 * `prioronn` the prior on n, specified as a subtype of `DiscreteUnivariateDistribution` of the Distributions Julia package. Our implementation requires that `prioronn` has support on {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, because otherwise rounding errors will accumulate too much. 
 * `prioronτCτA` is the prior on (τC, τA), which allows for correlation between τC and τA. Its type is a subtype of ContinuousMultivariateDistribution. It should have support contained in [0,∞)x[0,∞). 
@@ -31,9 +31,9 @@ Parameters:
 * `coverages` a vector with coverages = ancestral reads + derived reads. Is a subtype of `AbstractVector{<:Integer}`. All coverages should be non-negative integers, and at least one should be positive. 
 * `derivedreads` a vector of derived reads. Is a subtype of `AbstractVector{<:Integer}`. All elements of the vector should be non-negative integers.
 * `frequencies` a vector of frequencies. Is a subtype of AbstractVector{<:Real}. Each frequency is between 0.0 and 1.0. At least one frequency should be strictly between 0.0 and 1.0 with corresponding positive coverage. 
-* `counts`, all elements should be non-negative. For each index, `counts[index]` indicates how many loci there are with `derivedreads[index]` derived reads, coverage `coverages[index]` and frequency `frequencies[index]`. If `counts` is not provided, it will be calculated from `derivedreads`, `coverages` and `frequencies`. 
+* `counts`, all elements should be non-negative. For each index, `counts[index]` indicates how many loci there are with `derivedreads[index]` derived reads, coverage `coverages[index]` and frequency `frequencies[index]`.  
 * `df` a DataFrame from the DataFrames package in the DICE-2 format. So the first column should be the number of ancestral reads, the second column the number of derived reads, the third column the frequencies in the anchor population, and the fourth column the counts of how many times this particular combination of ancestral reads, derived reads and frequency occurs. 
-* `dicefile` is either an opened DICE file, or a path to a DICE file. 
+* `dicefile` is either an opened (gzipped) DICE file, or a path to a (gzipped) DICE file. 
 
 [Keyword parameters](https://docs.julialang.org/en/v1/manual/functions/#Keyword-Arguments). Keyword parameters should be given as keyword=value to the function, in case you want to set another value then the default. 
 * `messages` is an integer. If `messages` is non-positive, no message will be printed. If `messages` is positive, every `messages` steps a message will be printed with the progress of the sampler. The default value is `nsteps÷100`, so every 1% progress a message is printed.  
@@ -72,7 +72,7 @@ Parameters:
 * `uniquecoverages` should be equal to `unique(coverages)`.  
 * `derivedreads` a vector of derived reads. Is a subtype of `AbstractVector{<:Integer}`. All elements of the vector should be non-negative integers.
 * `frequencies` a vector of frequencies. Is a subtype of AbstractVector{<:Real}. Each frequency is between 0.0 and 1.0. At least one frequency should be strictly between 0.0 and 1.0 with corresponding positive coverage. 
-* `counts`, all elements should be non-negative. For each index, `counts[index]` indicates how many loci there are with `derivedreads[index]` derived reads, coverage `coverages[index]` and frequency `frequencies[index]`. If `counts` is not provided, it will be calculated from `derivedreads`, `coverages` and `frequencies`.
+* `counts`, all elements should be non-negative. For each index, `counts[index]` indicates how many loci there are with `derivedreads[index]` derived reads, coverage `coverages[index]` and frequency `frequencies[index]`. 
 
 Keyword argument. 
 * `messages` is an integer. If `messages` is non-positive, no message will be printed. If `messages` is positive, every `messages` steps a message will be printed with the progress of the calculations. The default value is `length(n)*length(τCrange)*length(τArange)*length(ϵrange)÷100`, so every 1% progress a message is printed.
