@@ -32,7 +32,7 @@ makedocs(
 
 # updating website:
 # git checkout gh-pages
-# remove all files, except for docs/ 
+# remove all files, except for docs/ and README.md
 # remove all files in docs/build 
 # git checkout main 
 # make changes. 
