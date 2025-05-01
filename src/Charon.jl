@@ -447,7 +447,7 @@ end # function.
 
 The MCMC sampler as descriped in the article. Parameters:
 # Number of chains and samples:
-* `nchains` a positive integers. Indicates the number of chains. If you start Julia with `nchains` threads, then the chains are run in parallel. 
+* `nchains` a positive integer. Indicates the number of chains. If you start Julia with `nchains` threads, then the chains are run in parallel. 
 * `nsteps` a positive number. The number of samples for each chain.
 # Prior
 * `prioronn` the prior on n. 
@@ -455,12 +455,12 @@ The MCMC sampler as descriped in the article. Parameters:
 * `prioronϵ` the prior on ϵ.
 # Data
 * `coverages` a vector of positive integers, the coverages. 
-* `derivedreads` a vector of non-negative integers, the number of derived reads. for each index `0 ≤ derivedreads[i] ≤ coverages[i]` 
-* `frequencies` a vector of real number in the interval [0, 1]. For at least one index i, coverages[i]>0 and 0 < frequencies[i] < 1
+* `derivedreads` a vector of non-negative integers, the number of derived reads. for each index `0 ≤ derivedreads[i] ≤ coverages[i]`. 
+* `frequencies` a vector of real number in the interval [0, 1]. For at least one index `i`, `coverages[i]>0` and `0 < frequencies[i] < 1`.
 * `counts` a vector with positive integers. For each index `counts[i]` indicates in how many loci there is coverage `coverages[i]`, `derivedreads[i]` derived reads and frequency `frequencies[i]`. 
 # Keyword parameters 
 * `messages` an integer. If the integer is non-positive, no messages will be printed. If messages is positive, every `messages` steps, an update about the progress will be printed. The default value is `nsteps÷100`, so every 1% progress a message is printed. 
-* `scalingmessages` should the sampler print a message when the scaling constant change? The default value is true. 
+* `scalingmessages` should the sampler print a message when the scaling constants change? The default value is true. 
 
 Output: 
 The output is a vector of tuples. Each tuple represents a chain. Each tuple has the following elements: `nsample, τCsample, τAsample, ϵsample, accepted, logjointprob`. 
@@ -783,7 +783,7 @@ Calculate the unconditional posterior from the output of MCMCsampler. `chains` i
 * `τCsample` sample for τC. 
 * `τAsample` sample for τA.
 * `ϵsample` sample for ϵ. 
-* `accepted` `accepted[1] = true`. `accepted[i]` indicates whether row `i` is unequal to row `i-1`.  
+* `accepted` Was any of the conditioned MCMC sample proposals, or the proposal for n accepted at step i?
 * `logjointprob` the log joint probability up to a constant not depending on the parameters. 
 * `chainid` the id of the chain. A number 1,...,nchains. 
 """

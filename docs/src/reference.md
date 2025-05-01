@@ -59,7 +59,7 @@ unpackposterior
 
 ## exactposterior 
 
-`exactposterior` is a function to calculate the posterior up to a fixed constant, only depending on the data, but not on the parameters. You can use this function for maximum likelihood estimation. `MCMCsampler` uses this function to find a good starting point for the sampler. It has two methods. 
+`exactposterior` is a function to calculate the posterior up to a fixed constant, only depending on the data, but not on the parameters. You can use this function for maximum posterior estimation. If you use uniform priors, you can use this function for maximum likelihood estimation. `MCMCsampler` uses this function to find a good starting point for the sampler. It has two methods. 
 
 The posterior is calculated for each combination of parameters (n, τC, τA, ϵ) with n in `nrange`, τC in `τCrange`, τA in `τArange` and ϵ in `ϵrange`. So make sure that `length(nrange)*length(τCrange)*length(τArange)*length(ϵrange)` is not too large, as otherwise it will take a very long time and you might run out of memory. 
 
@@ -78,6 +78,23 @@ Keyword argument.
 * `messages` is an integer. If `messages` is non-positive, no message will be printed. If `messages` is positive, every `messages` steps a message will be printed with the progress of the calculations. 
 
 The output are 5 vectors: `ns, τCs, τAs, ϵs, logliks`, of each of length `length(n)*length(τCrange)*length(τArange)*length(ϵrange)`, where `logliks[index]` is the log likelihood, up to an additive constant, with parameters `ns[index]`, `τCs[index]`, `τAs[index]` and `ϵs[index]`. The additive constant only depends on the data, but not on the parameters. 
+
+### Maximum posterior estimation (MAP estimator)
+
+Suppose you have results
+```julia
+ns, τCs, τAs, ϵs, logliks = exactposterior(args...) 
+```
+where `args` are your arguments (data and priors, etc.). Then you can calculate then 
+```julia
+i_max = argmax(logliks)
+```
+is an index where the posterior is at its maximum. 
+So 
+```
+ns[i_max], τCs[i_max], τAs[i_max], ϵs[i_max]
+```
+is the MAP estimator. 
 
 ```@docs 
 exactposterior
