@@ -219,7 +219,7 @@ end
 """
     makeqfixedn(n::Integer, uniquecoveragesandderivedreads::AbstractVector{<:Tuple{Integer, Integer}})
 
-Construct a dictionary with keys uniquecoveragesandderivedreads[i] (which is a tuple where the first element is the coverage and the second is the number of derived reads) and values real vectors of length 2n+1. The values in the vectors are arbitrary.
+Construct a dictionary with keys `uniquecoveragesandderivedreads[i]` (which is a tuple where the first element is the coverage and the second is the number of derived reads) and values real vectors of length 2n+1. The values in the vectors are arbitrary.
 """
 makeqfixedn(n::Integer, uniquecoveragesandderivedreads::AbstractVector{<:Tuple{Integer, Integer}}) = Dict(t => Vector{Float64}(undef, 2n+1) for t in uniquecoveragesandderivedreads) 
 
