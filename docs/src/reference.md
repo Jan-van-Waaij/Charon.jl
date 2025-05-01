@@ -94,7 +94,7 @@ So
 ```
 ns[i_max], τCs[i_max], τAs[i_max], ϵs[i_max]
 ```
-is the MAP estimator. 
+is the MAP estimator. If you provide uniform priors, then the MAP estimator is a maximum likelihood estimator, where you maximise over the domain of the prior. 
 
 ```@docs 
 exactposterior
