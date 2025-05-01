@@ -27,9 +27,16 @@ export unpackposterior # Constructs the unconditional posterior from the conditi
 """
     EigenExpansion{Q<:AbstractMatrix{<:Real}, R<:Real, S<:AbstractVector{R}, T<:AbstractMatrix{<:Real}}
 
-Representation of a matrix decomposition M=P*D*P^{-1}, where D is a diagonal matrix and P an invertible matrix with inverse Pinv. The fields are P, D and Pinv of types Q, Diagonal{R, S}, and T, respectively. 
+Representation of a matrix decomposition `M=P*D*P^{-1}`, where D is a diagonal matrix and P an invertible matrix with inverse Pinv.
 
-This decomposition can be used for fast matrix exponentiation, using that exp(M) = P*exp(D)*Pinv, and the fact that the exponent of a diagonal matrix is formed by exponentiating its diagonal elements.
+This decomposition can be used for fast matrix exponentiation, using that `exp(M) = P*exp(D)*Pinv`, and the fact that the exponent of a diagonal matrix is formed by exponentiating its diagonal elements.
+
+Fields:
+```julia
+P::Q 
+D::Diagonal{R, S}
+Pinv::T 
+```
 """
 struct EigenExpansion{Q<:AbstractMatrix{<:Real}, R<:Real, S<:AbstractVector{R}, T<:AbstractMatrix{<:Real}}
     P::Q
@@ -40,7 +47,7 @@ struct EigenExpansion{Q<:AbstractMatrix{<:Real}, R<:Real, S<:AbstractVector{R}, 
     """
     EigenExpansion(M::AbstractMatrix{<:Real})
 
-    Try to find a decomposition M = P*D*P^(-1).
+    Try to find a decomposition `M = P*D*P^(-1)`.
     """
     function EigenExpansion(M::AbstractMatrix{<:Real})
         F = eigen(M)
@@ -55,42 +62,42 @@ end
 """
     EigenExpansion(M::Tridiagonal{S, T}) where {S<:Real, T<:AbstractVector{S}}
 
-Try to find a decomposition M = P*D*P^(-1).
+Try to find a decomposition `M = P*D*P^(-1)`.
 """
 EigenExpansion(M::Tridiagonal{S, T}) where {S<:Real, T<:AbstractVector{S}} = EigenExpansion(SizedMatrix{size(M)...,S}(M))
 
 """
     EigenExpansion(M::Diagonal{S, T}) where {S<:Real, T<:AbstractVector{S}}
 
-Try to find a decomposition M = P*D*P^(-1).
+Try to find a decomposition `M = P*D*P^(-1)`.
 """
 EigenExpansion(M::Diagonal{S, T}) where {S<:Real, T<:AbstractVector{S}} = EigenExpansion(SizedMatrix{size(M)...,S}(M))
 
 """
     EigenExpansion(M::Bidiagonal{S, T}) where {S<:Real, T<:AbstractVector{S}}
 
-Try to find a decomposition M = P*D*P^(-1).
+Try to find a decomposition `M = P*D*P^(-1)`.
 """
 EigenExpansion(M::Bidiagonal{S, T}) where {S<:Real, T<:AbstractVector{S}} = EigenExpansion(SizedMatrix{size(M)...,S}(M))
 
 """
     EigenExpansion(M::SymTridiagonal{S, T}) where {S<:Real, T<:AbstractVector{S}}
 
-Try to find a decomposition M = P*D*P^(-1).
+Try to find a decomposition `M = P*D*P^(-1)`.
 """
 EigenExpansion(M::SymTridiagonal{S, T}) where {S<:Real, T<:AbstractVector{S}} = EigenExpansion(SizedMatrix{size(M)...,S}(M))
 
 """
     EigenExpansion(M::Symmetric{S, T}) where {S<:Real, T<:AbstractVector{S}}
 
-Try to find a decomposition M = P*D*P^(-1).
+Try to find a decomposition `M = P*D*P^(-1)`.
 """
 EigenExpansion(M::Symmetric{S, T}) where {S<:Real, T<:AbstractVector{S}} = EigenExpansion(SizedMatrix{size(M)...,S}(M))
 
 """
     Base.show(io::IO, mime::MIME{Symbol("text/plain")}, F::EigenExpansion{Q, R, S, T}) where {Q<:AbstractMatrix{<:Real}, R<:Real, S<:AbstractVector{R}, T<:AbstractMatrix{<:Real}}
 
-Pretty display of EigenExpansion types. 
+Pretty display of `EigenExpansion` types. 
 """
 function Base.show(io::IO, mime::MIME{Symbol("text/plain")}, F::EigenExpansion{Q, R, S, T}) where {Q<:AbstractMatrix{<:Real}, R<:Real, S<:AbstractVector{R}, T<:AbstractMatrix{<:Real}}
     print(io, "EigenExpansion{$Q, $R, $S, $T}\n\nP:\n\n")
@@ -104,16 +111,16 @@ end
 """
     ==(E1::EigenExpansion, E2::EigenExpansion)
 
-Test whether E1 and E2 have the same decomposition P*D*P^(-1), so whether E1.P == E2.P, E1.D == E2.D and E1.Pinv == E2.Pinv.
+Test whether `E1` and `E2` have the same decomposition `P*D*P^(-1)`, so whether `E1.P == E2.P`, `E1.D == E2.D` and `E1.Pinv == E2.Pinv`.
 """
 ==(E1::EigenExpansion, E2::EigenExpansion) = E1.P == E2.P && E1.D == E2.D && E1.Pinv == E2.Pinv
 
 """
     exp(s::Real, F::EigenExpansion)
 
-Calculate e^(s*M) in a numerically efficient way. 
+Calculate `e^(s*M)` in a numerically efficient way. 
 
-If F=EigenExpansion(M), then exp(s*M)=exp(s, F)=F.P*exp(s*F.D)*F.Pinv, which makes 
+If `F=EigenExpansion(M)`, then `exp(s*M)=exp(s, F)=F.P*exp(s*F.D)*F.Pinv`, which makes 
 use of the fast implementation of exp for diagonal matrices (it is just the exponentiation of the diagonal elements).     
 """
 exp(s::Real, F::EigenExpansion) =  F.P*exp(s*F.D)*F.Pinv
@@ -152,7 +159,7 @@ calcmatrix(τC::Real, τA::Real, Qꜜ::EigenExpansion, Q::EigenExpansion) =  exp
 """
     preparedata(n::Integer, frequencies::AbstractVector{<:Real})
 
-Returns a named tuple (Qꜜ=Qꜜ, Q=Q, binomialcoefficients=binomialcoefficients, hvals=hvals), where 
+Returns a named tuple `(Qꜜ=Qꜜ, Q=Q, binomialcoefficients=binomialcoefficients, hvals=hvals)`, where 
 Qꜜ and Q are EigenExpansions of Qꜜ and Q (as in Schraiber 2018), respectively. 
 hvals is a (2n+1) x length(y) matrix of type SizedMatrix. SizedMatrix is used rather than SMatrix because this matrix is so large and 
 SMatrix is slow for large matrices. The matrix hvals is defined as hvals[k+1,i] = frequencies[i]^k*(1-frequencies[i])^(2n-k) (note that Julia has 1-based indexing).
@@ -174,7 +181,23 @@ end
 """
     logprobderivedreads!(q::AbstractDict{<:Tuple{Integer, Integer}, <:AbstractVector{<:Real}}, n::Integer, τC::Real, τA::Real, ϵ::Real, coverages::AbstractVector{<:Integer}, uniquecoverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer}, counts::AbstractVector{<:Integer}, Qꜜ::EigenExpansion, Q::EigenExpansion, binomialcoefficients::AbstractVector{<:Integer}, hvals::AbstractMatrix{<:Real})
 
-Calculate the log probability of the data, a.k.a. the likelihood. This function mutates q, which is a dictionary, and is used for intermediate calculations. 
+Calculate the log probability of the data, a.k.a. the likelihood. q is mutated with the function `updateq!`. `q` is a dictionary, and is used for intermediate calculations. 
+
+Parameters: 
+* `n` number of individuals.
+* `τC` and `τA` drift parameters.
+* `ϵ` error rate. 
+
+Data:
+* `coverages` the coverages.
+* `uniquecoverages=unique(coverages)`
+* `derivedreads` vector with the derived reads.
+* `counts` in `counts[i]` loci there are `coverages[i]` coverage and `derivedreads[i]` derived reads. 
+Other data:
+* `Qꜜ` the matrix Qꜜ as in Schraiber 2018.
+* `Q` the matrix Q as in Schraiber 2018.
+* `binomialcoefficients` vector of length 2n+1, where entry k+1 is the binomial coefficient of 2n over k. Note that Julia is 1-based.
+* `hvals` the matrix as constructed with the function `preparedata`. See documentation for `preparedata`.
 """
 function logprobderivedreads!(q::AbstractDict{<:Tuple{Integer, Integer}, <:AbstractVector{<:Real}}, n::Integer, τC::Real, τA::Real, ϵ::Real, coverages::AbstractVector{<:Integer}, uniquecoverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer}, counts::AbstractVector{<:Integer}, Qꜜ::EigenExpansion, Q::EigenExpansion, binomialcoefficients::AbstractVector{<:Integer}, hvals::AbstractMatrix{<:Real})
     if τC < 0 || τA < 0 || ϵ < 0 || ϵ > 1
@@ -226,7 +249,7 @@ makeqfixedn(n::Integer, uniquecoveragesandderivedreads::AbstractVector{<:Tuple{I
 """
     makeqfixedn(n::Integer, coverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer})
 
-Construct a dictionary with keys (coverages[i], derivedreads[i]) and values real vectors of length 2n+1. The values in the vectors are arbitrary.
+Construct a dictionary with keys `(coverages[i], derivedreads[i])` and values real vectors of length 2n+1. The values in the vectors are arbitrary.
 """
 function makeqfixedn(n::Integer, coverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer})
     uniquecoveragesandderivedreads = unique(zip(coverages, derivedreads))
@@ -236,7 +259,7 @@ end
 """
     makeq(nmax::Integer, coverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer})
 
-Construct a vector of length nmax, where the n-th item is a dictionary with keys (coverages[i], derivedreads[i]) and values real vectors of length 2n+1. 
+Construct a vector of length nmax, where the n-th item is a dictionary with keys (coverages[i], derivedreads[i]) and values real vectors of length 2n+1. The vectors contain arbitrary data. 
 """
 function makeq(nmax::Integer, coverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer})
     uniquecoveragesandderivedreads = unique(zip(coverages, derivedreads))
@@ -246,7 +269,7 @@ end
 """
     updateq!(q::AbstractDict{<:Tuple{Integer, Integer}, <:AbstractVector{<:Real}}, n::Integer, ϵ::Real, uniquecoverages::AbstractVector{<:Integer}, binomialcoefficients::AbstractVector{<:Integer})
 
-Update the dictionary q, so that q[(R, d)][k+1] is the probability of d derived reads out of R when you have k derived alleles with n inidividuals and error rate ϵ. 
+Update the dictionary `q``, so that `q[(R, d)][k+1]` is the probability of d derived reads out of R when you have k derived alleles with `n` inidividuals and error rate `ϵ`. `uniquecoverages` are all unique occurences of coverages in the data. `binomialcoefficients` is a vector of length 2n+1, with k+1-th entry equal to the binomial coefficients of 2n over k. Note that Julia has 1-based indexing.  
 """
 function updateq!(q::AbstractDict{<:Tuple{Integer, Integer}, <:AbstractVector{<:Real}}, n::Integer, ϵ::Real, uniquecoverages::AbstractVector{<:Integer}, binomialcoefficients::AbstractVector{<:Integer})
     for R in uniquecoverages
@@ -264,7 +287,17 @@ end
 """
     calcloglik(coverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer}, counts::AbstractVector{<:Integer}, M::AbstractMatrix{<:Real}, hvals::AbstractMatrix{<:Real}, q::AbstractDict{<:Tuple{Integer, Integer}, <:AbstractVector{<:Real}}, index::Integer)
 
-Calculate the log-likelihood at locus index. 
+Calculate the log-likelihood of the data at index `index`. 
+Parameters:
+* `coverages` vector with coverages.
+* `derivedreads` vector with derived reads.
+* `counts` `counts[i]` loci have `coverages[i]` coverage and `derivedreads[i]` derived reads. 
+* `M=e^{Q*τA}e^{QꜜτC}`, where `τC` and `τA` are the drift parameters, Q and Qꜜ are the matrices as in Schraiber 2018, and M is calculated with `calcmatrix`.
+* `hvals` the matrix constructed with `preparedata`, see the documentation of `preparedata`.
+* `q` the dictionary made with `makeq`.
+* `index` the index of the data we are working on. 
+
+This function returns a real number. 
 """
 calcloglik(coverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer}, counts::AbstractVector{<:Integer}, M::AbstractMatrix{<:Real}, hvals::AbstractMatrix{<:Real}, q::AbstractDict{<:Tuple{Integer, Integer}, <:AbstractVector{<:Real}}, index::Integer) = counts[index]*log(max(0.0, dot(q[coverages[index], derivedreads[index]], M, view(hvals, :, index))))
 
@@ -306,6 +339,8 @@ Calculate the posterior for every combination of parameters (n, τC, τA, ϵ) wh
 `coverages`, `derivedreads`, `frequencies`, and `counts` are the data. So there are `counts[i]` loci with coverage `coverages[i]`, `derivedreads[i]` derived reads and frequency `frequencies[i]` in the anchor population. `uniquecoverages=unique(coverages)`.
 
 `messages` is an integer. If it is positive, every `message` step an update is printed about the progress. If `messages` is non-positive, no update will be printed. 
+
+The output are four vectors `ns, τCs, τAs, ϵs, logliks`. For each index `logliks[i]` is the log likelihood with `ns[i]` individuals, drift parameters `τCs[i]` and `τAs[i]` and error rate `ϵs[i]`. 
 """
 function exactposterior(nrange::AbstractVector{<:Integer}, τCrange::AbstractVector{<:Real}, τArange::AbstractVector{<:Real}, ϵrange::AbstractVector{<:Real}, coverages::AbstractVector{<:Integer}, uniquecoverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer}, frequencies::AbstractVector{<:Real}, counts::AbstractVector{<:Integer}; messages::Integer=0)
     # Check conditions.
@@ -376,7 +411,7 @@ end # function.
 """
     exactposterior(nrange::AbstractVector{<:Integer}, τCrange::AbstractVector{<:Real}, τArange::AbstractVector{<:Real}, ϵrange::AbstractVector{<:Real}, coverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer}, frequencies::AbstractVector{<:Real}; messages::Integer=length(n)*length(τCrange)*length(τArange)*length(ϵrange)÷100)
 
-A user-friendly function to calculate the log posterior. The input are data in the form of three vectors: `coverages`, `derivedreads` and `frequencies`. This is the data for all loci. So at locus i, the coverage is `coverages[i]`, the number of derived reads is `derivedreads[i]` and the frequency in the anchor population is `frequencies[i]`.
+A user-friendly function to calculate the log posterior. The input are data in the form of three vectors: `coverages`, `derivedreads` and `frequencies`. This is the data for all loci. So at locus i, the coverage is `coverages[i]`, the number of derived reads is `derivedreads[i]` and the frequency in the anchor population is `frequencies[i]`. The other parameters are the same as in the other method.
 
 The output is the same as the other method. The default value for `messages` is `length(n)*length(τCrange)*length(τArange)*length(ϵrange)÷100)`, so every 1% progress an update is printed. 
 """
@@ -421,19 +456,19 @@ The MCMC sampler as descriped in the article. Parameters:
 # Data
 * `coverages` a vector of positive integers, the coverages. 
 * `derivedreads` a vector of non-negative integers, the number of derived reads. for each index `0 ≤ derivedreads[i] ≤ coverages[i]` 
-* `frequencies` a vector of real number in the interval [0, 1]. For at least one index 0 < frequencies[i] < 1
-*`counts` a vector with positive integers. For each index `counts[i]` indicates in how many loci there is coverage `coverages[i]`, `derivedreads[i]` derived reads and frequency `frequencies[i]`. 
+* `frequencies` a vector of real number in the interval [0, 1]. For at least one index i, coverages[i]>0 and 0 < frequencies[i] < 1
+* `counts` a vector with positive integers. For each index `counts[i]` indicates in how many loci there is coverage `coverages[i]`, `derivedreads[i]` derived reads and frequency `frequencies[i]`. 
 # Keyword parameters 
 * `messages` an integer. If the integer is non-positive, no messages will be printed. If messages is positive, every `messages` steps, an update about the progress will be printed. The default value is `nsteps÷100`, so every 1% progress a message is printed. 
 * `scalingmessages` should the sampler print a message when the scaling constant change? The default value is true. 
 
 Output: 
-The output is a vector of tuples. Each tuple represents a chain. Each tuple has the following elements: `nsample, τCsample, τAsample, ϵsample, acceptedvec, logjointprob`. 
+The output is a vector of tuples. Each tuple represents a chain. Each tuple has the following elements: `nsample, τCsample, τAsample, ϵsample, accepted, logjointprob`. 
 * `nsample` sample for the number of individuals. 
 * `τCsample` a nsample x maximum(prioronn) matrix, where the n-th column is the MCMC chain of τC conditioned on n individuals. 
 * `τAsample` same as τCsample but now for τA.
 * `ϵsample` same as τCsample but now for ϵ.
-* `acceptedvec` a nsample x (maximum(prior)+1) matrix, where the first column indicates whether the proposal for n was accepted. The n+1-th column indicates whether the proposal for (τC,τA,ϵ) was accepted for the posterior conditioned on n. 
+* `accepted` a nsample x (maximum(prior)+1) matrix, where the first column indicates whether the proposal for n was accepted. The n+1-th column indicates whether the proposal for (τC,τA,ϵ) was accepted for the posterior conditioned on n. 
 * `logjointprob` a nsample x (maximum(prior)+1) matrix, where the first column is the log joint probability, up to a constant not depending on parameters, of the unconditioned posterior, and the n+1-th column is the log joint probability, up to a constant not depending on the parameters, of the posterior conditioned on n individuals. 
 """
 function MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivariateDistribution, prioronτCτA::ContinuousMultivariateDistribution, prioronϵ::ContinuousUnivariateDistribution, coverages::AbstractVector{<:Integer}, derivedreads::AbstractVector{<:Integer}, frequencies::AbstractVector{<:Real}, counts::AbstractVector{<:Integer}; messages::Integer=nsteps÷100, scalingmessages::Bool=true)
@@ -706,7 +741,7 @@ end
 """
     MCMCsampler(nchains::Integer, nsteps::Integer, prioronn::DiscreteUnivariateDistribution, prioronτCτA::ContinuousMultivariateDistribution, prioronϵ::ContinuousUnivariateDistribution, dicefile::AbstractString; messages::Integer=nsteps÷100, scalingmessages::Bool=true, header::Union{Nothing, Bool}=nothing)
 
-Same as the other mehtods, except that dicefile is a path to a (gzipped) CSV-file in DICE 2 format, as decribed above. 
+Same as the other methods, except that dicefile is a path to a (gzipped) CSV-file in DICE 2 format, as decribed above. 
 
 WARNING: If you work with gzipped files, Julia 1.3 or higher is required. 
 """

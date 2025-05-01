@@ -48,7 +48,7 @@ MCMCsampler
 
 ## unpackposterior 
 
-This function is used to build the unconditional posterior from the MCMC samples conditioned on n, as described in the paper. It has one method with two arguments. 
+This function is used to build the unconditional posterior from the MCMC samples conditioned on n, as described in the paper. It has two methods. 
 
 Arguments:
 * `nsteps` is the number of MCMC samples, a positive integer. 
@@ -75,7 +75,7 @@ Parameters:
 * `counts`, all elements should be non-negative. For each index, `counts[index]` indicates how many loci there are with `derivedreads[index]` derived reads, coverage `coverages[index]` and frequency `frequencies[index]`. 
 
 Keyword argument. 
-* `messages` is an integer. If `messages` is non-positive, no message will be printed. If `messages` is positive, every `messages` steps a message will be printed with the progress of the calculations. The default value is `length(n)*length(τCrange)*length(τArange)*length(ϵrange)÷100`, so every 1% progress a message is printed.
+* `messages` is an integer. If `messages` is non-positive, no message will be printed. If `messages` is positive, every `messages` steps a message will be printed with the progress of the calculations. 
 
 The output are 5 vectors: `ns, τCs, τAs, ϵs, logliks`, of each of length `length(n)*length(τCrange)*length(τArange)*length(ϵrange)`, where `logliks[index]` is the log likelihood, up to an additive constant, with parameters `ns[index]`, `τCs[index]`, `τAs[index]` and `ϵs[index]`. The additive constant only depends on the data, but not on the parameters. 
 
