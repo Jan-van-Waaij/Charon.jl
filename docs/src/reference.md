@@ -85,11 +85,10 @@ Suppose you have results
 ```julia
 ns, τCs, τAs, ϵs, logliks = exactposterior(args...) 
 ```
-where `args` are your arguments (data and priors, etc.). Then you can calculate then 
+where `args` are your arguments (data and priors, etc.). Then you can calculate the index where the log likelihood is maximised:
 ```julia
 i_max = argmax(logliks)
 ```
-is an index where the posterior is at its maximum. 
 So 
 ```
 ns[i_max], τCs[i_max], τAs[i_max], ϵs[i_max]
