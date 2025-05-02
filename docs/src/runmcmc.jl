@@ -57,9 +57,9 @@ prioronϵ = Uniform(0, 0.5) # uniform prior on the interval [0, 0.5].
 
 @info "I am running the mcmc sampler."
 if length(ARGS) == 2 
-    chains = MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, dicefile; messages = 0, scalingmessages=false)
+    chains = MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, dicefile; scalingmessages=false)
 elseif length(ARGS) == 3 
-    chains = MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, basecountfile, freqfile; messages = 0, scalingmessages=false)
+    chains = MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, basecountfile, freqfile; scalingmessages=false)
 end 
     
 @info "I am unpacking the posterior."
