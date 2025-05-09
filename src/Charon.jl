@@ -269,7 +269,7 @@ end
 """
     updateq!(q::AbstractDict{<:Tuple{Integer, Integer}, <:AbstractVector{<:Real}}, n::Integer, ϵ::Real, uniquecoverages::AbstractVector{<:Integer}, binomialcoefficients::AbstractVector{<:Integer})
 
-Update the dictionary `q``, so that `q[(R, d)][k+1]` is the probability of d derived reads out of R when you have k derived alleles with `n` inidividuals and error rate `ϵ`. `uniquecoverages` are all unique occurences of coverages in the data. `binomialcoefficients` is a vector of length 2n+1, with k+1-th entry equal to the binomial coefficients of 2n over k. Note that Julia has 1-based indexing.  
+Update the dictionary `q`, so that `q[(R, d)][k+1]` is the probability of d derived reads out of R when you have k derived alleles with `n` inidividuals and error rate `ϵ`. `uniquecoverages` are all unique occurences of coverages in the data. `binomialcoefficients` is a vector of length 2n+1, with k+1-th entry equal to the binomial coefficients of 2n over k. Note that Julia has 1-based indexing.  
 """
 function updateq!(q::AbstractDict{<:Tuple{Integer, Integer}, <:AbstractVector{<:Real}}, n::Integer, ϵ::Real, uniquecoverages::AbstractVector{<:Integer}, binomialcoefficients::AbstractVector{<:Integer})
     for R in uniquecoverages

@@ -47,7 +47,7 @@ The output is a [CSV-file](https://en.wikipedia.org/wiki/Comma-separated_values)
 3. τAsample: τA values
 4. ϵsample: ϵ values 
 5. accepted: was the proposal accepted?
-6. logjointprob: the log probability, up to a additive constant,
+6. logjointprob: the log probability, up to a additive constant, only depending on the data, but not on the parameters
 7. chainid: whether this is the first, second, ... chain.
 
 Each row is a draw from the posterior. 
@@ -80,7 +80,7 @@ For instance, say at our position 239923 on chr 1, 20% of a particular populatio
 0.2
 ```
 
-Please note that both files should have the same number of lines. Both files can be zipped.
+Please note that both files should have the same number of lines. Both files can be gzipped.
 
 ### Alternative data format.
 We also allow data in the [DICE-2 format](https://github.com/grenaud/dice?tab=readme-ov-file#2-pop-method-input-data-format). 
@@ -133,7 +133,7 @@ or
 ```julia
 julia --threads=4 path/to/runmcmc.jl path/to/dicefile path/to/outputfile
 ```
-where the output is saved in `outputfile`. `dicefile`, `basecountfile`, and `frequencyfile` might be a CSV files or a zipped CSV files. Example files can be found [here](#Example-files). The script installs Charon, and other necessary Julia packages, loads them and executes the MCMC sampler. 
+where the output is saved in `outputfile`. `dicefile`, `basecountfile`, and `frequencyfile` might be a CSV files or a gzipped CSV files. Example files can be found [here](#Example-files). The script installs Charon, and other necessary Julia packages, loads them and executes the MCMC sampler. 
 
 
 ### Example
@@ -163,6 +163,8 @@ or
 ```julia
 julia runmcmc.jl IBS_ind4.dice.gz output.csv
 ```
+### Very old versions of Julia
+In very old versions of Julia (≤1.2), the script does not work with gzipped files. So first unzip your files, and then run them as above. 
 
 ## Detailed description of the software 
 
@@ -174,7 +176,7 @@ Type
 ```
 julia --threads=4 
 ```
-this starts `julia` with 4 threads, and enables you to run 4 mcmc chains in parallel. You can use another number, if you want to run more or less chains in parallel. This starts the Julia [REPL](https://docs.julialang.org/en/v1/stdlib/REPL/). For Julia 1.4 or older, you need to set the `JULIA_NUM_THREADS` environment variable, as described [here](#older-versions-of-julia).
+this starts `julia` with 4 threads, and enables you to run 4 mcmc chains in parallel. You can use another number, if you want to run fewer or more chains in parallel. This starts the Julia [REPL](https://docs.julialang.org/en/v1/stdlib/REPL/). For Julia 1.4 or older, you need to set the `JULIA_NUM_THREADS` environment variable, as described [here](#older-versions-of-julia).
 
 
 ### Install Charon.
@@ -272,7 +274,7 @@ The output of this function
 nsample, τCsample, τAsample, ϵsample, accepted, logjointprob = chains[1]
 ```
 * `nsample` is the MCMC chain for the number of individuals. 
-* `τCsample` is (in this example) a 100'000x10 matrix. The k-th  column is the τC sample of the posterior conditioned on k individuals.
+* `τCsample` is (in this example) a 100'000x10 matrix. The k-th  column is the τC sample of the posterior conditioned on k individuals. Keep in mind that Julia has 1-based indexing.
 * `τAsample` similar to `τCsample`, but now for τA.
 * `ϵsample` similar to `τCsample`, but now for ϵ.
 * `accepted` is a 100'000x11 matrices of true/false values. The first column indicates whether a proposal for n is accepted. The k+1-th column indicates whether a proposal for (τC, τA,ϵ) of the posterior conditioned on k individuals was accepted.
@@ -283,7 +285,7 @@ You can obtain the unconditioned sample from the posterior as follows
 using Charon 
 results = unpackposterior(chains)
 ```
-`unpackposterior` does the following. It produces a [DataFrame](https://dataframes.juliadata.org/stable/man/working_with_dataframes/) with the unconditional posterior. Each row is an draw from the posterior. We have at at row i, for the first chain, `τC[i]=τCsample[i, nsample[i]]`, so it uses the `τC` value belonging conditioning on `k=nsample[i]`. Similar for `τA`, and `ϵ`. It concatenates all chains, and gives each an ID, going from 1,...,4 (in this example). 
+`unpackposterior` does the following. It produces a [DataFrame](https://dataframes.juliadata.org/stable/man/working_with_dataframes/) with the unconditional posterior. Each row is an draw from the posterior. We have at at row i, for the first chain, `τC[i]=τCsample[i, nsample[i]]`, so it uses the `τC` value belonging to conditioning on `k=nsample[i]`. Similar for `τA`, and `ϵ`. It concatenates all chains, and gives each an ID, going from 1,...,4 (in this example). 
 
 
 `results` is a `DataFrame` with a sample from the unconditioned posterior. It has 7 columns, which are described [here](#output-format).  

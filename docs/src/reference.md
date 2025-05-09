@@ -16,7 +16,7 @@ Data formats:
 
 You can input the data in four formats. 
 1. With two (opened) (gzipped) files: a base count file, which is a CSV file where the first column are the number of derived reads, and the second column is the coverage, and a frequency file, which is a CSV file with one column, containing the frequencies. The data at line i in the base count file corresponds to the same locus as the data on line i of the frequency file.   
-2. As an (opened) (gzipped) DICE file, or in the form of a DataFrame, also in DICE format. So the first column is the number of ancestral reads, the second column is the number of derived reads, the third column is the frequency in the anchor population, and the fourth column is the count of the number of loci where this combination of three numbers occur. 
+2. As an (opened) (gzipped) DICE file, or in the form of a [DataFrame](https://dataframes.juliadata.org/), also in DICE format. So the first column is the number of ancestral reads, the second column is the number of derived reads, the third column is the frequency in the anchor population, and the fourth column is the count of the number of loci where this combination of three numbers occur. 
 3. Or, by providing three vectors: `coverages`, `derivedreads`, `frequencies`, of length equal to the number of SNPs, where at locus `i`, there are `derivedreads[i]` derived reads, `coverages[i]` coverage and `frequencies[i]` frequency in the anchor population. 
 4. The third format is given with four vectors: `coverages`, `derivedreads`, `frequencies`, `counts`. This means that there are `counts[i]` loci with `coverages[i]` coverage, `derivedreads[i]` derived reads and frequency `frequencies[i]` in the anchor population.
 
@@ -32,7 +32,7 @@ Parameters:
 * `derivedreads` a vector of derived reads. Is a subtype of `AbstractVector{<:Integer}`. All elements of the vector should be non-negative integers.
 * `frequencies` a vector of frequencies. Is a subtype of AbstractVector{<:Real}. Each frequency is between 0.0 and 1.0. At least one frequency should be strictly between 0.0 and 1.0 with corresponding positive coverage. 
 * `counts`, all elements should be non-negative. For each index, `counts[index]` indicates how many loci there are with `derivedreads[index]` derived reads, coverage `coverages[index]` and frequency `frequencies[index]`.  
-* `df` a DataFrame from the DataFrames package in the DICE-2 format. So the first column should be the number of ancestral reads, the second column the number of derived reads, the third column the frequencies in the anchor population, and the fourth column the counts of how many times this particular combination of ancestral reads, derived reads and frequency occurs. 
+* `df` a [DataFrame](https://dataframes.juliadata.org/) from the DataFrames package in the DICE-2 format. So the first column should be the number of ancestral reads, the second column the number of derived reads, the third column the frequencies in the anchor population, and the fourth column the counts of how many times this particular combination of ancestral reads, derived reads and frequency occurs. 
 * `dicefile` is either an opened (gzipped) DICE file, or a path to a (gzipped) DICE file. 
 
 [Keyword parameters](https://docs.julialang.org/en/v1/manual/functions/#Keyword-Arguments). Keyword parameters should be given as keyword=value to the function, in case you want to set another value then the default. 
@@ -59,7 +59,7 @@ unpackposterior
 
 ## exactposterior 
 
-`exactposterior` is a function to calculate the posterior up to a fixed constant, only depending on the data, but not on the parameters. You can use this function for maximum posterior estimation. If you use uniform priors, you can use this function for maximum likelihood estimation. `MCMCsampler` uses this function to find a good starting point for the sampler. It has two methods. 
+`exactposterior` is a function to calculate the posterior up to a fixed constant, only depending on the data, but not on the parameters. You can use this function for maximum posterior estimation. If you use uniform priors, you can use this function for maximum likelihood estimation over the support of the prior. `MCMCsampler` uses this function to find a good starting point for the sampler. It has two methods. 
 
 The posterior is calculated for each combination of parameters (n, τC, τA, ϵ) with n in `nrange`, τC in `τCrange`, τA in `τArange` and ϵ in `ϵrange`. So make sure that `length(nrange)*length(τCrange)*length(τArange)*length(ϵrange)` is not too large, as otherwise it will take a very long time and you might run out of memory. 
 
@@ -79,7 +79,7 @@ Keyword argument.
 
 The output are 5 vectors: `ns, τCs, τAs, ϵs, logliks`, of each of length `length(n)*length(τCrange)*length(τArange)*length(ϵrange)`, where `logliks[index]` is the log likelihood, up to an additive constant, with parameters `ns[index]`, `τCs[index]`, `τAs[index]` and `ϵs[index]`. The additive constant only depends on the data, but not on the parameters. 
 
-### Maximum posterior estimation (MAP estimator)
+### Maximum posterior estimation (MAP estimator) and maximum likelihood estimation
 
 Suppose you have results
 ```julia
@@ -93,7 +93,7 @@ So
 ```
 ns[i_max], τCs[i_max], τAs[i_max], ϵs[i_max]
 ```
-is the MAP estimator. If you provide uniform priors, then the MAP estimator is a maximum likelihood estimator, where you maximise over the domain of the prior. 
+is the MAP estimator. If you provide uniform priors, then the MAP estimator is a maximum likelihood estimator, where you maximise over the support of the prior. 
 
 ```@docs 
 exactposterior
