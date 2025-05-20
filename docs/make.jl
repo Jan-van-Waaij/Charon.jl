@@ -40,6 +40,6 @@ makedocs(
 # build website
 # commit
 # git checkout gh-pages
-# cp docs/build/* . 
+# cp -r docs/build/* . 
 # commit 
 # git push origin gh-pages 
