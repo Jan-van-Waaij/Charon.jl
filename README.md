@@ -57,7 +57,11 @@ A CSV file in DICE-2 format has four columns. In this order: number of ancestral
 ## Using the sampler. 
 
 ### Convenience script.
-[Click here for an example script.](runmcmc.jl) called runmcmc.jl. Safe this on your computer. This script sets uniform priors on `τC`, `τA`, `ϵ` and `n`, and four chains with 100'000 samples. The script saves the output as a CSV file. You can use your favourite software to analyse it. It works as follows (assuming Julia is in your path, and you use Julia 1.5 or higher):
+We use the following example [script](runmcmc.jl):
+```bash
+wget https://jan-van-waaij.github.io/Charon.jl/runmcmc.jl 
+```
+ called runmcmc.jl. Safe this on your computer. This script sets uniform priors on `τC`, `τA`, `ϵ` and `n`, and four chains with 100'000 samples. The script saves the output as a CSV file. You can use your favourite software to analyse it. It works as follows (assuming Julia is in your path, and you use Julia 1.5 or higher):
 ```julia
 julia --threads=4 path/to/runmcmc.jl path/to/dicefile path/to/outputfile
 ```
