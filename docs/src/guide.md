@@ -25,15 +25,21 @@ and allele frequency:
 ```bash
 wget ftp://ftp.healthtech.dtu.dk:/public/edna_allelefreq/IBS_ind4_freq_IBS.gz
 ```
-and download the following [script](runmcmc.jl). Put all three files in one folder, and navigate to that folder in the terminal. Then copy-paste 
+and download the following [script](runmcmc.jl):
+```bash
+wget https://jan-van-waaij.github.io/Charon.jl/runmcmc.jl 
+```
+
+Put all three files in one folder, and navigate to that folder in the terminal. Then copy-paste 
 ```julia
 julia --threads=4 runmcmc.jl IBS_ind4_basecount_IBS_ind4.gz IBS_ind4_freq_IBS.gz output.csv
 ```
-in your terminal and press enter. This executes an MCMC sampler, whose output is saved to `output.csv`. This might take a while. See the ["Output format" section](#Output-format) below to interpret the output. The script takes care of installing and loading the appropriate Julia packages, including Charon. It generates 100'000 samples, and sets uniform priors on n, τC, τA and ϵ. 
+in your terminal and press enter. This executes an MCMC sampler, whose output is saved to `output.csv`. This might take a few hours. See the ["Output format" section](#Output-format) below to interpret the output. The script takes care of installing and loading the appropriate Julia packages, including Charon. It generates 100'000 samples, and sets uniform priors on n, τC, τA and ϵ. 
 
 ### Windows
 If you use Windows Powershell, you can use 
 ```powershell
+Invoke-WebRequest -Uri "https://jan-van-waaij.github.io/Charon.jl/runmcmc.jl" -OutFile "runmcmc.jl"
 Invoke-WebRequest -Uri "ftp://ftp.healthtech.dtu.dk/public/edna_allelefreq/IBS_ind4_basecount_IBS_ind4.gz" -OutFile "IBS_ind4_basecount_IBS_ind4.gz"
 Invoke-WebRequest -Uri "ftp://ftp.healthtech.dtu.dk/public/edna_allelefreq/IBS_ind4_freq_IBS.gz" -OutFile "IBS_ind4_freq_IBS.gz"
 ```
@@ -257,7 +263,7 @@ nsteps = 100_000
 
 
 #### [Execute sampler](@id output-mcmc-sampler)
-We can now execute our sampler, which might take a while. 
+We can now execute our sampler, which might take a few hours. 
 ```julia
 using Charon 
 chains = MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, basecountfile, frequencyfile)

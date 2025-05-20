@@ -127,7 +127,7 @@ nchains = 4
 nsteps = 100_000
 ```
 
-8. We can now run our sampler, which might take a while. 
+8. We can now run our sampler, which might take a few hours. 
 ```julia
 using Charon 
 chains = MCMCsampler(nchains, nsteps, prioronn, prioronτCτA, prioronϵ, dicefile)

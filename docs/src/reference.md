@@ -28,10 +28,10 @@ Parameters:
 * `prioronn` the prior on n, specified as a subtype of `DiscreteUnivariateDistribution` of the Distributions Julia package. Our implementation requires that `prioronn` has support on {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, because otherwise rounding errors will accumulate too much. 
 * `prioronτCτA` is the prior on (τC, τA), which allows for correlation between τC and τA. Its type is a subtype of ContinuousMultivariateDistribution. It should have support contained in [0,∞)x[0,∞). 
 * `prioronϵ` is the prior on ϵ. It should have support in [0, 0.5). It is a subtype of `ContinuousUnivariateDistribution` in the Distributions package. 
-* `coverages` a vector with coverages = ancestral reads + derived reads. Is a subtype of `AbstractVector{<:Integer}`. All coverages should be non-negative integers, and at least one should be positive. 
+* `coverages` a vector with coverages = ancestral reads + derived reads. Is a subtype of `AbstractVector{<:Integer}`. All coverages should be non-negative integers, and at least one should be positive, where the corresponding frequency is strictly between 0 and 1.
 * `derivedreads` a vector of derived reads. Is a subtype of `AbstractVector{<:Integer}`. All elements of the vector should be non-negative integers.
 * `frequencies` a vector of frequencies. Is a subtype of AbstractVector{<:Real}. Each frequency is between 0.0 and 1.0. At least one frequency should be strictly between 0.0 and 1.0 with corresponding positive coverage. 
-* `counts`, all elements should be non-negative. For each index, `counts[index]` indicates how many loci there are with `derivedreads[index]` derived reads, coverage `coverages[index]` and frequency `frequencies[index]`.  
+* `counts`, a vector of positive integers. For each index, `counts[index]` indicates how many loci there are with `derivedreads[index]` derived reads, coverage `coverages[index]` and frequency `frequencies[index]`.  
 * `df` a [DataFrame](https://dataframes.juliadata.org/) from the DataFrames package in the DICE-2 format. So the first column should be the number of ancestral reads, the second column the number of derived reads, the third column the frequencies in the anchor population, and the fourth column the counts of how many times this particular combination of ancestral reads, derived reads and frequency occurs. 
 * `dicefile` is either an opened (gzipped) DICE file, or a path to a (gzipped) DICE file. 
 
@@ -68,7 +68,7 @@ Parameters:
 * `τCrange` vector of τC values. Subtype of AbstractVector{<:Real}. All values should be non-negative. 
 * `τArange` vector of τA values. Subtype of AbstractVector{<:Real}. All values should be non-negative. 
 * `ϵrange` vector of ϵ values. Is a subtype of AbstractVector{<:Real}. All values should be non-negative and smaller than 0.5. 
-* `coverages` a vector with coverages = ancestral reads + derived reads. Is a subtype of `AbstractVector{<:Integer}`. All coverages should be non-negative integers, and at least one should be positive.
+* `coverages` a vector with coverages = ancestral reads + derived reads. Is a subtype of `AbstractVector{<:Integer}`. All coverages should be non-negative integers, and at least one should be positive, with corresponding frequency strictly between 0 and 1. 
 * `uniquecoverages` should be equal to `unique(coverages)`.  
 * `derivedreads` a vector of derived reads. Is a subtype of `AbstractVector{<:Integer}`. All elements of the vector should be non-negative integers.
 * `frequencies` a vector of frequencies. Is a subtype of AbstractVector{<:Real}. Each frequency is between 0.0 and 1.0. At least one frequency should be strictly between 0.0 and 1.0 with corresponding positive coverage. 
@@ -93,7 +93,7 @@ So
 ```
 ns[i_max], τCs[i_max], τAs[i_max], ϵs[i_max]
 ```
-is the MAP estimator. If you provide uniform priors, then the MAP estimator is a maximum likelihood estimator, where you maximise over the support of the prior. 
+is the MAP estimator. If you provide uniform priors, then the MAP estimator is a maximum likelihood estimator as well, where you maximise over the support of the prior. 
 
 ```@docs 
 exactposterior
